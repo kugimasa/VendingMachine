@@ -5,24 +5,12 @@ class CurrencyStock:
     FILE_NAME = 'currency_stock.json'
 
     def __init__(self):
-        currencies_json = {}
-
         try:
             with open(self.FILE_NAME, 'r') as f:
                 currencies_json = json.load(f)
-
-            currencies = {}
-            for currency, count in currencies_json.items():
-                currencies[Currency(int(currency))] = count
-            self.__currencies = currencies
+            self.__currencies = {Currency(int(currency)) : count for currency, count in currencies_json.items()}
         except:
-            self.__currencies = {
-                Currency.Ten: 5,
-                Currency.Fifty: 5,
-                Currency.Hundred: 5,
-                Currency.FiveHundred: 5,
-                Currency.Thousand: 5,
-            }
+            self.__currencies = self.__default_currency_stock()
 
     def add(self, currency):
         self.__currencies[currency] += 1
@@ -53,3 +41,12 @@ class CurrencyStock:
     def __write(self):
         with open(self.FILE_NAME, 'w') as f:
             json.dump(self.__currencies, f)
+
+    def __default_currency_stock(self):
+        return {
+                Currency.Ten: 5,
+                Currency.Fifty: 5,
+                Currency.Hundred: 5,
+                Currency.FiveHundred: 5,
+                Currency.Thousand: 5,
+            }
